@@ -1,6 +1,5 @@
 # MongoidSortable
-
-TODO: Write a gem description
+[![Build Status](https://travis-ci.org/flexoid/mongoid_sortable.png?branch=master)](https://travis-ci.org/flexoid/mongoid_sortable)
 
 ## Installation
 
@@ -18,7 +17,35 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Model code:
+```ruby
+class Book
+  include Mongoid::Document
+  include MongoidSortable::Sorting
+  
+  sortable_by :title, :created_at
+end
+```
+
+Controller code:
+```ruby
+@books = Book.all
+```
+
+View code:
+```ruby
+# Generates ?order_by=created_at_asc or ?order_by=created_at_desc
+# depending on current @book criteria order
+sorting_link(@book, :created_at, 'Book Timestamp')
+
+# Customize link
+sorting_link(@book, :created_at, 'Book Timestamp') do |name, path, current_order, is_active|
+  # Whatever you want to generate based on block parameters
+end
+```
+
+By default, sorting link has html classes *sorting_link asc/desc* 
+and *active* if sorting by that field is enabled now.
 
 ## Contributing
 
