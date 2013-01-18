@@ -17,7 +17,7 @@ Or install it yourself as:
 
 ## Usage
 
-Model code:
+#### Model code:
 ```ruby
 class Book
   include Mongoid::Document
@@ -27,12 +27,12 @@ class Book
 end
 ```
 
-Controller code:
+#### Controller code:
 ```ruby
 @books = Book.all
 ```
 
-View code:
+#### View code:
 ```ruby
 # Generates ?order_by=created_at_asc or ?order_by=created_at_desc
 # depending on current @book criteria order
@@ -46,6 +46,31 @@ end
 
 By default, sorting link has html classes *sorting_link asc/desc* 
 and *active* if sorting by that field is enabled now.
+
+* * *
+
+#### There is ability to customize queries generation.
+```ruby
+sortable_by :domestic_gross, :foreign_gross do |gross_type|
+  "movie_details.grosses.#{gross_type}"
+end
+```
+Using this with `domestic_gross_desc`, for example, 
+generates desceting sorting by `movie_details.grosses.domestic_gross_desc` field.
+It can be used to get rid of long url parameters which reflects your internal document structure.
+
+Also you can set block that will be used to generate sorting field 
+for all parameters that don't match to explicit `sortable_by`
+```ruby
+default_sorting do |param|
+  "movie_details.#{param}"
+end
+```
+So, for example, `sorting(order_by: ticket_cost_asc)` will generate query 
+with ascenting `movie_details.ticket_cost` sorting.
+
+Of course, you can add more complicated logic inside of `sortable_by` and `default_sorting` block, 
+all that you need is to return string with field name.
 
 ## Contributing
 
